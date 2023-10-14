@@ -16,6 +16,7 @@ import Categories from './collections/Categories'
 import { Media } from './collections/Media'
 import { Orders } from './collections/Orders'
 import { Pages } from './collections/Pages'
+import PointsOfSale from './collections/PointsOfSale'
 import Products from './collections/Products'
 import Users from './collections/Users'
 import BeforeDashboard from './components/BeforeDashboard'
@@ -61,11 +62,11 @@ export default buildConfig({
             ...config.resolve?.alias,
             dotenv: path.resolve(__dirname, './dotenv.js'),
             [path.resolve(__dirname, 'collections/Products/hooks/beforeChange')]: mockModulePath,
-            [path.resolve(__dirname, 'collections/Users/hooks/createStripeCustomer')]:
-              mockModulePath,
+            [path.resolve(__dirname, 'collections/Users/hooks/createStripeCustomer')]: mockModulePath,
             [path.resolve(__dirname, 'collections/Users/endpoints/customer')]: mockModulePath,
             [path.resolve(__dirname, 'endpoints/create-payment-intent')]: mockModulePath,
             [path.resolve(__dirname, 'endpoints/customers')]: mockModulePath,
+            [path.resolve(__dirname, 'endpoints/poins-of-sale')]: mockModulePath,
             [path.resolve(__dirname, 'endpoints/products')]: mockModulePath,
             [path.resolve(__dirname, 'endpoints/seed')]: mockModulePath,
             stripe: mockModulePath,
@@ -82,7 +83,38 @@ export default buildConfig({
   }),
   // database-adapter-config-end
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
-  collections: [Pages, Products, Orders, Media, Categories, Users],
+  collections: [PointsOfSale, Categories, Products, Orders, Media, Pages, Users],
+  //TODO : i18n
+  // i18n: {
+  //   fallbackLng: 'fr', // default
+  //   debug: false, // default
+  //   resources: {
+  //     en: {
+  //       custom: {
+  //         // namespace can be anything you want
+  //         key1: 'Translation with {{variable}}', // translation
+  //       },
+  //       // override existing translation keys
+  //       general: {
+  //         dashboard: 'HomeTests',
+  //       },
+  //     },
+  //   },
+  // }
+
+  localization: {
+    locales: [
+      {
+        label: 'English',
+        code: 'en',
+      },
+      {
+        label: 'Français',
+        code: 'fr',
+      },
+    ],
+    defaultLocale: 'fr',
+  },
   globals: [Settings, Header, Footer],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),

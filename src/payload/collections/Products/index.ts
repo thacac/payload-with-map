@@ -41,12 +41,20 @@ const Products: CollectionConfig = {
   },
   fields: [
     {
-      name: 'title',
+      name: 'name',
       type: 'text',
       required: true,
+      label: {
+        en: 'Name',
+        fr: 'Nom',
+      },
     },
     {
       name: 'publishedOn',
+      label: {
+        en: 'Published On',
+        fr: 'Publié le',
+      },
       type: 'date',
       admin: {
         position: 'sidebar',
@@ -69,10 +77,17 @@ const Products: CollectionConfig = {
       type: 'tabs',
       tabs: [
         {
-          label: 'Content',
+          label: {
+            en: 'Content',
+            fr: 'Contenu',
+          },
           fields: [
             {
               name: 'layout',
+              label: {
+                en: 'Layout',
+                fr: 'Disposition de la page',
+              },
               type: 'blocks',
               required: true,
               blocks: [CallToAction, Content, MediaBlock, Archive],
@@ -80,7 +95,10 @@ const Products: CollectionConfig = {
           ],
         },
         {
-          label: 'Product Details',
+          label: {
+            en: 'Product Details',
+            fr: 'Détails du produit',
+          },
           fields: [
             {
               name: 'stripeProductID',
@@ -122,6 +140,10 @@ const Products: CollectionConfig = {
     },
     {
       name: 'categories',
+      label: {
+        en: 'Categories',
+        fr: 'Catégories',
+      },
       type: 'relationship',
       relationTo: 'categories',
       hasMany: true,

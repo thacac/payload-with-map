@@ -6,6 +6,7 @@ import { CallToAction } from '../../blocks/CallToAction'
 import { Content } from '../../blocks/Content'
 import { MediaBlock } from '../../blocks/MediaBlock'
 import { slugField } from '../../fields/slug'
+import { MapContainer } from './ui/MapContainer'
 
 const PointsOfSale: CollectionConfig = {
   slug: 'sales-points',
@@ -47,20 +48,41 @@ const PointsOfSale: CollectionConfig = {
       type: 'textarea',
     },
     {
-      name: 'location',
-      type: 'point',
-      label: {
-        en: 'Location',
-        fr: 'Localisation',
-      },
-    },
-    {
       type: 'tabs',
       tabs: [
         {
           label: {
+            en: 'Localisation',
+            fr: 'Adresse',
+          },
+          description: {
+            en: 'Enter the address of your point of sale using the map below',
+            fr: "Entrez l'adresse de votre point de vente en utilisant la carte ci-dessous",
+          },
+          fields: [
+            {
+              name: 'location',
+              type: 'point',
+              admin: {
+                components: {
+                  Field: MapContainer,
+                },
+              },
+              label: {
+                en: 'Location',
+                fr: 'Localisation',
+              },
+            },
+          ],
+        },
+        {
+          label: {
             en: 'Opening slots',
             fr: "Créneaux d'ouverture",
+          },
+          description: {
+            en: 'List here the opening slots of your point of sale',
+            fr: "Listez ici les créneaux d'ouverture de votre point de vente",
           },
           fields: [
             {
@@ -79,6 +101,10 @@ const PointsOfSale: CollectionConfig = {
           label: {
             en: "Click'n'Collect slots",
             fr: 'Créneaux Click & Collect',
+          },
+          description: {
+            en: 'List here the slots when your customers can pick up their orders',
+            fr: 'Listez ici les créneaux où vos clients peuvent venir récupérer leurs commandes',
           },
           fields: [
             {

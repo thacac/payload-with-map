@@ -10,6 +10,16 @@ import { MapContainer } from './ui/MapContainer'
 
 const PointsOfSale: CollectionConfig = {
   slug: 'sales-points',
+  labels: {
+    singular: {
+      en: 'Sales Point',
+      fr: 'Point de vente',
+    },
+    plural: {
+      en: 'Sales Points',
+      fr: 'Points de vente',
+    },
+  },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', '_status'],

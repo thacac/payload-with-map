@@ -6,7 +6,7 @@ import { CallToAction } from '../../blocks/CallToAction'
 import { Content } from '../../blocks/Content'
 import { MediaBlock } from '../../blocks/MediaBlock'
 import { slugField } from '../../fields/slug'
-import { MapContainer } from './ui/MapContainer'
+import Map from './ui/Map/components/Map'
 
 const PointsOfSale: CollectionConfig = {
   slug: 'sales-points',
@@ -75,7 +75,7 @@ const PointsOfSale: CollectionConfig = {
               type: 'point',
               admin: {
                 components: {
-                  Field: MapContainer,
+                  Field: Map,
                 },
               },
               label: {

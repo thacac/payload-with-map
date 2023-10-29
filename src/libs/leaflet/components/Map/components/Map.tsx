@@ -1,13 +1,13 @@
-import React, { Children, FC, Suspense, useEffect, useState } from 'react'
-import { LatLngTuple, Point } from 'leaflet'
+import React, { useEffect, useState } from 'react'
+import { LatLngTuple } from 'leaflet'
 import dynamic from 'next/dynamic'
 
 import { config } from '../config'
+// import MapTopBar from '@components/TopBar'
 import MapContextProvider from '../context/MapContextProvider'
 import useMapContext from '../context/useMapContext'
 import useLeafletWindow from '../hooks/useLeafletWindow'
 import useMarkerData from '../hooks/useMarkerData'
-import { MapProps } from './AppMapContainer'
 
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css'
@@ -38,17 +38,18 @@ const AppMapContainer = dynamic(async () => (await import('./AppMapContainer')).
   ssr: false,
 })
 
+//TODO: replace with real data
+const Places = [
+  [43.77533192072405, 1.2916765394663996],
+  [43.77533192072425, 1.2916765394664096],
+] as LatLngTuple[]
+
 const MapInner = () => {
   const { map } = useMapContext()
   const leafletWindow = useLeafletWindow()
 
-  const places: LatLngTuple[] = [
-    [43.77533192072405, 1.2916765394663996],
-    [43.77533192072425, 1.2916765394664096],
-  ].map(coords => [coords[0], coords[1]] as LatLngTuple)
-
   const { allMarkersBoundCenter } = useMarkerData({
-    locations: places,
+    locations: Places,
     map,
     viewportWidth: window.innerWidth,
     viewportHeight: window.innerHeight,
@@ -85,13 +86,13 @@ const MapInner = () => {
               zoom={allMarkersBoundCenter.minZoom}
             />
             <LocateButton />
-            {places && (
+            {Places && (
               <LeafletCluster
                 icon={config.ui.markerIcon}
                 color={config.ui.iconColor}
                 chunkedLoading
               >
-                {places?.map((coords, index) => (
+                {Places.map((coords, index) => (
                   <CustomMarker
                     icon={config.ui.markerIcon}
                     color={config.ui.iconColor}
@@ -111,7 +112,7 @@ const MapInner = () => {
 }
 
 // pass through to get context in <MapInner>
-const Map: FC<MapProps> = () => (
+const Map = () => (
   <MapContextProvider>
     <MapInner />
   </MapContextProvider>

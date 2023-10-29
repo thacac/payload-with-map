@@ -2256,7 +2256,14 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
-"@types/leaflet@^1.9.6":
+"@types/leaflet.markercluster@^1.5.3":
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/@types/leaflet.markercluster/-/leaflet.markercluster-1.5.3.tgz#b3e52ffb1efc18ebdca3da2d6e8a174ec2c2bd07"
+  integrity sha512-G19K7/Nzwvoz9RDKL2/U1RxkdhDqXPDVRokrmI4eNDfSLShlitY6w/hp4bUaMdi2cwyYcNgdNOarpzDHMuSFrQ==
+  dependencies:
+    "@types/leaflet" "*"
+
+"@types/leaflet@*", "@types/leaflet@^1.9.7":
   version "1.9.7"
   resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.9.7.tgz#c9a216d77bcdd1f9af4e3100ff3d71cffa437af7"
   integrity sha512-FOfKB1ALYUDnXkH7LfTFreWiZr9R7GErqGP+8lYQGWr2GFq5+jy3Ih0M7e9j41cvRN65kLALJ4dc43yZwyl/6g==
@@ -7688,11 +7695,6 @@ react-leaflet-cluster@^2.1.0:
   integrity sha512-16X7XQpRThQFC4PH4OpXHimGg19ouWmjxjtpxOeBKpvERSvIRqTx7fvhTwkEPNMFTQ8zTfddz6fRTUmUEQul7g==
   dependencies:
     leaflet.markercluster "^1.5.3"
-
-react-leaflet-core@^2.1.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/react-leaflet-core/-/react-leaflet-core-2.1.1.tgz#d82a3349d5f178e927f0e91a6bc49bd9abdab8c7"
-  integrity sha512-GXBbExuOIxaTGV6Xtw+23xqCBsxnX4jlJaI8pExBn64yS2pFf50b45s4WZE3szU92+rRoVBJuzL0mkwmPuOutg==
 
 react-leaflet@^4.2.1:
   version "4.2.1"

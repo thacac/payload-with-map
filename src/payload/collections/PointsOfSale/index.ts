@@ -5,8 +5,8 @@ import { Archive } from '../../blocks/ArchiveBlock'
 import { CallToAction } from '../../blocks/CallToAction'
 import { Content } from '../../blocks/Content'
 import { MediaBlock } from '../../blocks/MediaBlock'
+import mapPointField from '../../fields/mapPoint/config'
 import { slugField } from '../../fields/slug'
-import Map from './ui/Map/components/Map'
 
 const PointsOfSale: CollectionConfig = {
   slug: 'sales-points',
@@ -69,21 +69,7 @@ const PointsOfSale: CollectionConfig = {
             en: 'Enter the address of your point of sale using the map below',
             fr: "Entrez l'adresse de votre point de vente en utilisant la carte ci-dessous",
           },
-          fields: [
-            {
-              name: 'location',
-              type: 'point',
-              admin: {
-                components: {
-                  Field: Map,
-                },
-              },
-              label: {
-                en: 'Location',
-                fr: 'Localisation',
-              },
-            },
-          ],
+          fields: [mapPointField],
         },
         {
           label: {

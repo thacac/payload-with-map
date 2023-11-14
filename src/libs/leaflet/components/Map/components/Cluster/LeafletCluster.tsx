@@ -27,8 +27,8 @@ type ClusterEvents = {
 
 type MarkerClusterControl = Leaflet.MarkerClusterGroupOptions & {
   children: React.ReactNode
-  icon: FunctionComponent<LucideProps>
-  color: string
+  icon?: FunctionComponent<LucideProps>
+  color?: string
 } & ClusterEvents
 
 const CreateMarkerClusterGroup = (

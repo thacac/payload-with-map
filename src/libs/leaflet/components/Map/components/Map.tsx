@@ -1,6 +1,7 @@
 import React, { Children, FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { Marker, Tooltip, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
+import Control from 'react-leaflet-custom-control'
 import { LatLngExpression, LeafletMouseEvent } from 'leaflet'
 import dynamic from 'next/dynamic'
 
@@ -101,15 +102,13 @@ export const MapInner: FC<MapInnerProps> = ({
   useEffect(() => {
     if (!allMarkersBoundCenter || !map) return
 
-    const moveEnd = () => {
-      map.setMinZoom(allMarkersBoundCenter.minZoom - 1)
-      map.off('moveend', moveEnd)
-    }
-
-    map.setMinZoom(0)
+    // const moveEnd = () => {
+    //   map.setMinZoom(allMarkersBoundCenter.minZoom - 1)
+    //   map.off('moveend', moveEnd)
+    // }
     map.flyTo(allMarkersBoundCenter.centerPos, allMarkersBoundCenter.minZoom, { animate: false })
-    map.once('moveend', moveEnd)
-  }, [allMarkersBoundCenter])
+    // map.once('moveend', moveEnd)
+  }, [allMarkersBoundCenter, map])
 
   const renderChildren = () => {
     return Children.map(children, child => {
@@ -119,22 +118,21 @@ export const MapInner: FC<MapInnerProps> = ({
     }) as ReactElement<any, any>[]
   }
 
-  const isLoading = !leafletWindow
-
   return (
     <div style={{ width: '100%', height: '400px' }}>
-      {allMarkersBoundCenter && !isLoading ? (
+      {allMarkersBoundCenter && leafletWindow ? (
         <>
           {renderChildren()}
-          <AppMapContainer center={center} zoom={minZoom} maxZoom={maxZoom} minZoom={minZoom}>
+          <AppMapContainer
+            center={center}
+            zoom={minZoom}
+            maxZoom={maxZoom}
+            minZoom={minZoom}
+            allMarkersBoundCenter={allMarkersBoundCenter}
+          >
             {children}
             <LocationMarker />
             <>
-              <CenterToMarkerButton
-                center={allMarkersBoundCenter.centerPos}
-                zoom={allMarkersBoundCenter.minZoom}
-              />
-              <LocateButton />
               <LeafletCluster chunkedLoading>
                 {places?.map((coords, index) => (
                   <Marker draggable={true} key={index} position={coords} />

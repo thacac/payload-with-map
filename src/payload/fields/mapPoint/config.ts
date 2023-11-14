@@ -17,8 +17,8 @@ const mapPointField: Field = {
   required: true,
   custom: {
     defaultZoom: 8,
-    minZoom: 11,
-    maxZoom: 18,
+    minZoom: 13,
+    maxZoom: 7,
     center: [43.77533192072405, 1.2916765394663996],
   },
   admin: {

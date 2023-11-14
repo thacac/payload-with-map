@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { LatLngTuple } from 'leaflet'
+import React, { Children, FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react'
+import { Marker, Tooltip, useMapEvents } from 'react-leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
+import { LatLngExpression, LeafletMouseEvent } from 'leaflet'
 import dynamic from 'next/dynamic'
 
 import { config } from '../config'
+import { MapContext, MapContextValues } from '../context/MapContextProvider'
 // import MapTopBar from '@components/TopBar'
-import MapContextProvider from '../context/MapContextProvider'
 import useMapContext from '../context/useMapContext'
 import useLeafletWindow from '../hooks/useLeafletWindow'
 import useMarkerData from '../hooks/useMarkerData'
@@ -27,9 +29,6 @@ const CenterToMarkerButton = dynamic(
     ssr: false,
   },
 )
-const CustomMarker = dynamic(async () => (await import('./Marker')).CustomMarker, {
-  ssr: false,
-})
 const LocateButton = dynamic(async () => (await import('../ui/LocateButton')).LocateButton, {
   ssr: false,
 })
@@ -38,26 +37,67 @@ const AppMapContainer = dynamic(async () => (await import('./AppMapContainer')).
   ssr: false,
 })
 
-//TODO: replace with real data
-const Places = [
-  [43.77533192072405, 1.2916765394663996],
-  [43.77533192072425, 1.2916765394664096],
-] as LatLngTuple[]
+const LocationMarker = () => {
+  const markerRef = useRef(null)
+  const [position, setPosition] = useState<null | LatLngExpression>(null)
+  const { setPlaces } = useMapContext()
 
-const MapInner = () => {
-  const { map } = useMapContext()
+  const eventHandlers = {
+    dragend() {
+      const marker = markerRef.current
+      if (marker != null) {
+        setPosition(marker.getLatLng())
+        setPlaces([marker.getLatLng()])
+      }
+    },
+  }
+
+  const map = useMapEvents({
+    click: (e: LeafletMouseEvent) => {
+      setPosition(e.latlng)
+      setPlaces([e.latlng])
+      map.flyTo(e.latlng, map.getZoom())
+    },
+  })
+
+  return position === null ? null : (
+    <Marker position={position} draggable={true} ref={markerRef} eventHandlers={eventHandlers}>
+      <Tooltip direction="bottom" offset={[-15, 30]} opacity={1}>
+        Bordel de couille à cul
+      </Tooltip>
+    </Marker>
+  )
+}
+
+type MapInnerProps = {
+  defaultZoom?: number
+  minZoom?: number
+  maxZoom?: number
+  center?: LatLngExpression
+  children?: ReactElement
+}
+
+export type MapInnerChildrenProps = {
+  mapContext?: Omit<MapContextValues, 'setMap'>
+}
+
+export const MapInner: FC<MapInnerProps> = ({
+  defaultZoom = config.defaultZoom,
+  minZoom = config.minZoom,
+  maxZoom = config.maxZoom,
+  center = config.baseCenter,
+  children,
+}) => {
   const leafletWindow = useLeafletWindow()
+  const { map, places, setPlaces } = useMapContext()
 
   const { allMarkersBoundCenter } = useMarkerData({
-    locations: Places,
+    locations: places,
     map,
     viewportWidth: window.innerWidth,
     viewportHeight: window.innerHeight,
   })
 
-  const isLoading = !leafletWindow
-
-  /** watch position & zoom of all markers */
   useEffect(() => {
     if (!allMarkersBoundCenter || !map) return
 
@@ -71,51 +111,41 @@ const MapInner = () => {
     map.once('moveend', moveEnd)
   }, [allMarkersBoundCenter])
 
+  const renderChildren = () => {
+    return Children.map(children, child => {
+      return React.cloneElement(child as ReactElement<MapInnerChildrenProps>, {
+        mapContext: { map, places, setPlaces },
+      })
+    }) as ReactElement<any, any>[]
+  }
+
+  const isLoading = !leafletWindow
+
   return (
     <div style={{ width: '100%', height: '400px' }}>
       {allMarkersBoundCenter && !isLoading ? (
-        <AppMapContainer
-          center={allMarkersBoundCenter.centerPos}
-          zoom={allMarkersBoundCenter.minZoom}
-          maxZoom={config.maxZoom}
-          minZoom={config.minZoom}
-        >
-          <>
-            <CenterToMarkerButton
-              center={allMarkersBoundCenter.centerPos}
-              zoom={allMarkersBoundCenter.minZoom}
-            />
-            <LocateButton />
-            {Places && (
-              <LeafletCluster
-                icon={config.ui.markerIcon}
-                color={config.ui.iconColor}
-                chunkedLoading
-              >
-                {Places.map((coords, index) => (
-                  <CustomMarker
-                    icon={config.ui.markerIcon}
-                    color={config.ui.iconColor}
-                    key={index}
-                    position={coords}
-                  />
+        <>
+          {renderChildren()}
+          <AppMapContainer center={center} zoom={minZoom} maxZoom={maxZoom} minZoom={minZoom}>
+            {children}
+            <LocationMarker />
+            <>
+              <CenterToMarkerButton
+                center={allMarkersBoundCenter.centerPos}
+                zoom={allMarkersBoundCenter.minZoom}
+              />
+              <LocateButton />
+              <LeafletCluster chunkedLoading>
+                {places?.map((coords, index) => (
+                  <Marker draggable={true} key={index} position={coords} />
                 ))}
               </LeafletCluster>
-            )}
-          </>
-        </AppMapContainer>
+            </>
+          </AppMapContainer>
+        </>
       ) : (
         'Loading...'
       )}
     </div>
   )
 }
-
-// pass through to get context in <MapInner>
-const Map = () => (
-  <MapContextProvider>
-    <MapInner />
-  </MapContextProvider>
-)
-
-export default Map

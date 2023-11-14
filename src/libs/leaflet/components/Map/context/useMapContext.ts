@@ -3,11 +3,8 @@ import { useContext } from 'react'
 import { MapContext, type MapContextValues } from './MapContextProvider'
 
 const useMapContext = (): MapContextValues => {
-  const mapInstance = useContext(MapContext)
-  const map = mapInstance?.map
-  const setMap = mapInstance?.setMap
-
-  return { map, setMap }
+  const { map, setMap, places, setPlaces } = useContext(MapContext)
+  return { map, setMap, places, setPlaces }
 }
 
 export default useMapContext

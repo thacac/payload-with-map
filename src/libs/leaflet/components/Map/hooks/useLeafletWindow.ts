@@ -7,14 +7,10 @@ const useLeafletWindow = () => {
   )
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (window.L) {
-        setLeafletWindow(window.L)
-        clearInterval(interval)
-      }
-    }, 500)
-    return () => clearInterval(interval)
-  }, [])
+    if (window.L) {
+      setLeafletWindow(window.L)
+    }
+  }, [window])
 
   return leafletWindow
 }

@@ -1,23 +1,35 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react'
-import { LatLngTuple, map } from 'leaflet'
+import React, { FC, memo, use, useEffect, useState } from 'react'
+import { LeafletContextInterface } from '@react-leaflet/core'
+import { LatLngTuple } from 'leaflet'
+import dynamic from 'next/dynamic'
 // re-use Payload's built-in button component
-import { Button } from 'payload/components'
 // this is how we'll interface with Payload itself
 import { Label, useFieldType } from 'payload/components/forms'
 // retrieve and store the last used colors of your users
-import { usePreferences } from 'payload/components/preferences'
 import Error from 'payload/dist/admin/components/forms/Error/index'
 import { PointField } from 'payload/types'
 
-import Map from '../../../libs/leaflet/components/Map/components/Map'
+import { MapInnerChildrenProps } from '../../../libs/leaflet/components/Map/components/Map'
+import MapContextProvider from '../../../libs/leaflet/components/Map/context/MapContextProvider'
 import useMapContext from '../../../libs/leaflet/components/Map/context/useMapContext'
 
 // Import the SCSS stylesheet
 import './styles.scss'
 
+const MapInner = dynamic(
+  async () => (await import('../../../libs/leaflet/components/Map/components/Map')).MapInner,
+  {
+    ssr: false,
+  },
+)
+
+const DisplayPosition: FC<MapInnerChildrenProps> = ({ mapContext }) => {
+  console.log('mapContext', mapContext)
+  return <p>Places : {mapContext?.places?.join(',')}</p>
+}
+
 const MapPointField: React.FC<PointField> = props => {
   const { label, required, validate, custom } = props
-
   const {
     value = [],
     setValue,
@@ -29,25 +41,20 @@ const MapPointField: React.FC<PointField> = props => {
   })
   const classes = ['field-type', 'text', showError && 'error'].filter(Boolean).join(' ')
 
-  const [coordinates, setCoordinates] = useState<LatLngTuple>(value as LatLngTuple)
-
-  useEffect(() => {
-    setCoordinates(value as LatLngTuple)
-  }, [value])
-
-  // const handleSelectPoint = useCallback(() => {
-  //   setValue([43.77533192072405, 1.2916765394663996])
-  // }, [coordinates])
-
   return (
     <div className={classes}>
       <Label label={label} required={required} />
       <Error showError={showError} message={errorMessage} />
-      <Map
-        center={coordinates ? coordinates : custom?.center}
-        zoom={custom?.zoom}
-        position={coordinates ? coordinates : custom?.center}
-      />
+      <MapContextProvider>
+        <MapInner
+          center={custom.center}
+          defaultZoom={custom.defaultZoom}
+          minZoom={custom.minZoom}
+          maxZoom={custom.maxZoom}
+        >
+          <DisplayPosition />
+        </MapInner>
+      </MapContextProvider>
     </div>
   )
 }

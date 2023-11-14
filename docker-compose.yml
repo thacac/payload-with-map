@@ -9,7 +9,7 @@ services:
       - .:/home/node/app
       - node_modules:/home/node/app/node_modules
     working_dir: /home/node/app/
-    command: sh -c "yarn install" #&& yarn dev"
+    command: sh -c "yarn install && yarn dev"
     depends_on:
       - mongo
     env_file:
@@ -23,6 +23,18 @@ services:
       - --storageEngine=wiredTiger
     volumes:
       - data:/data/db
+    logging:
+      driver: none
+  
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - '8081:8081'
+    depends_on:
+      - mongo
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
     logging:
       driver: none
 

@@ -7,8 +7,9 @@ import { config } from '../../config'
 export interface CustomMarkerProps {
   position: LatLngExpression
   icon?: FunctionComponent<LucideProps>
-  color: string
+  color?: string
   label?: string
+  draggable?: boolean
 }
 
 const MarkerIconWrapper = ({ icon, color, label }: Partial<CustomMarkerProps>) => {
@@ -18,7 +19,7 @@ const MarkerIconWrapper = ({ icon, color, label }: Partial<CustomMarkerProps>) =
     <div className="relative inline-flex p-0 m-0">
       {label && (
         <span
-          className="absolute -inset-2 rounded-full opacity-40"
+          className="absolute -inset-2 rounded-full opacity-80"
           style={{ backgroundColor: color }}
         />
       )}

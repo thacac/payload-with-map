@@ -14,6 +14,7 @@ interface useMapDataValues {
 
 interface allMarkerPosValues {
   minZoom: number
+  maxZoom?: number
   centerPos: LatLngExpression
 }
 
@@ -37,7 +38,7 @@ const useMarkerData = ({
     if (!leafletWindow || !locations) return undefined
 
     const coordsSum: LatLngExpression[] = []
-    locations.forEach(coord => {
+    locations?.forEach(coord => {
       coordsSum.push(coord)
     })
     return leafletWindow.latLngBounds(coordsSum)

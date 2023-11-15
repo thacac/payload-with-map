@@ -6,7 +6,7 @@ import { LatLngExpression, LeafletMouseEvent } from 'leaflet'
 import dynamic from 'next/dynamic'
 
 import { config } from '../config'
-import { MapContext, MapContextValues } from '../context/MapContextProvider'
+import { MapContextValues } from '../context/MapContextProvider'
 // import MapTopBar from '@components/TopBar'
 import useMapContext from '../context/useMapContext'
 import useLeafletWindow from '../hooks/useLeafletWindow'
@@ -24,15 +24,6 @@ const LeafletCluster = dynamic(
   },
 )
 
-const CenterToMarkerButton = dynamic(
-  async () => (await import('../ui/CenterButton')).CenterButton,
-  {
-    ssr: false,
-  },
-)
-const LocateButton = dynamic(async () => (await import('../ui/LocateButton')).LocateButton, {
-  ssr: false,
-})
 const AppMapContainer = dynamic(async () => (await import('./AppMapContainer')).AppMapContainer, {
   loading: () => <p>loading...</p>,
   ssr: false,
@@ -57,7 +48,7 @@ const LocationMarker = () => {
     click: (e: LeafletMouseEvent) => {
       setPosition(e.latlng)
       setPlaces([e.latlng])
-      map.flyTo(e.latlng, map.getZoom())
+      map.flyTo(e.latlng)
     },
   })
 
@@ -91,7 +82,6 @@ export const MapInner: FC<MapInnerProps> = ({
 }) => {
   const leafletWindow = useLeafletWindow()
   const { map, places, setPlaces } = useMapContext()
-
   const { allMarkersBoundCenter } = useMarkerData({
     locations: places,
     map,
@@ -101,13 +91,7 @@ export const MapInner: FC<MapInnerProps> = ({
 
   useEffect(() => {
     if (!allMarkersBoundCenter || !map) return
-
-    // const moveEnd = () => {
-    //   map.setMinZoom(allMarkersBoundCenter.minZoom - 1)
-    //   map.off('moveend', moveEnd)
-    // }
     map.flyTo(allMarkersBoundCenter.centerPos, allMarkersBoundCenter.minZoom, { animate: false })
-    // map.once('moveend', moveEnd)
   }, [allMarkersBoundCenter, map])
 
   const renderChildren = () => {
@@ -125,13 +109,13 @@ export const MapInner: FC<MapInnerProps> = ({
           {renderChildren()}
           <AppMapContainer
             center={center}
-            zoom={minZoom}
+            zoom={defaultZoom}
             maxZoom={maxZoom}
             minZoom={minZoom}
             allMarkersBoundCenter={allMarkersBoundCenter}
           >
-            {children}
             <LocationMarker />
+            {children}
             <>
               <LeafletCluster chunkedLoading>
                 {places?.map((coords, index) => (

@@ -7,6 +7,7 @@ import { Content } from '../../blocks/Content'
 import { MediaBlock } from '../../blocks/MediaBlock'
 import mapPointField from '../../fields/mapPoint/config'
 import { slugField } from '../../fields/slug'
+import MapPointField from '../../fields/mapPoint/MapPointField'
 
 const PointsOfSale: CollectionConfig = {
   slug: 'sales-points',
@@ -45,15 +46,15 @@ const PointsOfSale: CollectionConfig = {
       type: 'text',
       required: true,
       label: {
-        en: 'Title',
-        fr: 'Titre',
+        en: 'Sales Point Title',
+        fr: 'Titre du point de vente',
       },
     },
     {
       name: 'description',
       label: {
-        en: 'Description',
-        fr: 'Description',
+        en: 'Point of sale description',
+        fr: 'Description du point de vente',
       },
       type: 'textarea',
     },
@@ -62,14 +63,25 @@ const PointsOfSale: CollectionConfig = {
       tabs: [
         {
           label: {
-            en: 'Localisation',
-            fr: 'Adresse',
+            en: 'Localization & Adress',
+            fr: 'Localisation & Adresse',
           },
           description: {
             en: 'Enter the address of your point of sale using the map below',
             fr: "Entrez l'adresse de votre point de vente en utilisant la carte ci-dessous",
           },
-          fields: [mapPointField],
+          fields: [
+            {
+              name: 'adress',
+              label: {
+                en: 'Adress',
+                fr: 'Adresse',
+              },
+              type: 'text',
+              required: true,
+            },
+            mapPointField,
+          ],
         },
         {
           label: {

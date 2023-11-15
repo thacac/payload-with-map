@@ -5,8 +5,8 @@ import { LocateFixed } from 'lucide-react'
 
 // FIXME: naming and structure
 export const config = {
-  minZoom: 11,
-  maxZoom: 18, // max zoom level of CARTO: 18
+  minZoom: 0,
+  maxZoom: 0, // max zoom level of CARTO: 18
   ui: {
     topBarHeight: 80,
     bigIconSize: 48,

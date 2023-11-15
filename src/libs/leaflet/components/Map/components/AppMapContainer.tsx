@@ -32,7 +32,6 @@ export const AppMapContainer: React.FC<MapProps> = ({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <ZoomControl position="topleft" />
       <Control position="topright">
         <CenterButton
           center={allMarkersBoundCenter.centerPos}

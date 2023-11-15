@@ -1,17 +1,15 @@
-import React, { FC, memo, use, useEffect, useState } from 'react'
-import { LeafletContextInterface } from '@react-leaflet/core'
-import { LatLngTuple } from 'leaflet'
+import React, { FC, use, useEffect, useState } from 'react'
+import { LatLng, LatLngTuple } from 'leaflet'
 import dynamic from 'next/dynamic'
 // re-use Payload's built-in button component
 // this is how we'll interface with Payload itself
 import { Label, useFieldType } from 'payload/components/forms'
 // retrieve and store the last used colors of your users
 import Error from 'payload/dist/admin/components/forms/Error/index'
-import { PointField } from 'payload/types'
+import { type PointField } from 'payload/types'
 
 import { MapInnerChildrenProps } from '../../../libs/leaflet/components/Map/components/Map'
 import MapContextProvider from '../../../libs/leaflet/components/Map/context/MapContextProvider'
-import useMapContext from '../../../libs/leaflet/components/Map/context/useMapContext'
 
 // Import the SCSS stylesheet
 import './styles.scss'
@@ -23,9 +21,28 @@ const MapInner = dynamic(
   },
 )
 
-const DisplayPosition: FC<MapInnerChildrenProps> = ({ mapContext }) => {
-  console.log('mapContext', mapContext)
-  return <p>Places : {mapContext?.places?.join(',')}</p>
+type DisplayPositionProps = MapInnerChildrenProps & {
+  value: any
+  setValue: (value: any) => void
+}
+
+const DisplayPosition: FC<DisplayPositionProps> = ({ mapContext, setValue, value }) => {
+  const [coord, setCoord] = useState(value)
+  const latlng = mapContext?.places?.length > 0 ? (mapContext?.places[0] as LatLng) : undefined
+
+  useEffect(() => {
+    if (latlng) {
+      setCoord([latlng.lat, latlng.lng])
+      setValue([latlng.lat, latlng.lng])
+    }
+  }, [latlng])
+
+  return (
+    <>
+      <p>Selected coords : {value !== coord && coord.join(' , ')}</p>
+      <p>Already recorded {value}</p>
+    </>
+  )
 }
 
 const MapPointField: React.FC<PointField> = props => {
@@ -37,7 +54,7 @@ const MapPointField: React.FC<PointField> = props => {
     showError,
   } = useFieldType({
     validate,
-    path: '',
+    path: 'coords',
   })
   const classes = ['field-type', 'text', showError && 'error'].filter(Boolean).join(' ')
 
@@ -45,6 +62,7 @@ const MapPointField: React.FC<PointField> = props => {
     <div className={classes}>
       <Label label={label} required={required} />
       <Error showError={showError} message={errorMessage} />
+
       <MapContextProvider>
         <MapInner
           center={custom.center}
@@ -52,7 +70,7 @@ const MapPointField: React.FC<PointField> = props => {
           minZoom={custom.minZoom}
           maxZoom={custom.maxZoom}
         >
-          <DisplayPosition />
+          <DisplayPosition setValue={setValue} value={value} />
         </MapInner>
       </MapContextProvider>
     </div>

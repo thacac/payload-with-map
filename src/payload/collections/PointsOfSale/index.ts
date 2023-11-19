@@ -7,7 +7,6 @@ import { Content } from '../../blocks/Content'
 import { MediaBlock } from '../../blocks/MediaBlock'
 import mapPointField from '../../fields/mapPoint/config'
 import { slugField } from '../../fields/slug'
-import MapPointField from '../../fields/mapPoint/MapPointField'
 
 const PointsOfSale: CollectionConfig = {
   slug: 'sales-points',
@@ -63,7 +62,7 @@ const PointsOfSale: CollectionConfig = {
       tabs: [
         {
           label: {
-            en: 'Localization & Adress',
+            en: 'Localization & Address',
             fr: 'Localisation & Adresse',
           },
           description: {
@@ -72,13 +71,19 @@ const PointsOfSale: CollectionConfig = {
           },
           fields: [
             {
-              name: 'adress',
+              name: 'address',
+              type: 'text',
+              admin: {
+                placeholder: {
+                  en: '2 shopping stree, 31000 Toulouse',
+                  fr: '2 rue du commerce, 31000 Toulouse',
+                },
+              },
+              required: true,
               label: {
-                en: 'Adress',
+                en: 'Address',
                 fr: 'Adresse',
               },
-              type: 'text',
-              required: true,
             },
             mapPointField,
           ],

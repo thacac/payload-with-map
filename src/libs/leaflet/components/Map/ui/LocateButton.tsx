@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { LatLngExpression } from 'leaflet'
-import { LocateFixed, PersonStanding } from 'lucide-react'
+import { LocateFixed } from 'lucide-react'
 
-import { CustomMarker } from '../components/Marker'
 import { config } from '../config'
 import useMapContext from '../context/useMapContext'
 
@@ -36,9 +35,6 @@ export const LocateButton: React.FC = () => {
       >
         <LocateFixed size={config.ui.mapIconSize} />
       </button>
-      {userPosition && (
-        <CustomMarker color={config.ui.iconColor} icon={PersonStanding} position={userPosition} />
-      )}
     </>
   )
 }

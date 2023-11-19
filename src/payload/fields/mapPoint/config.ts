@@ -8,12 +8,12 @@ export const validateHexColor = (value = ''): true | string => {
 }
 
 const mapPointField: Field = {
+  name: 'coords',
+  type: 'point',
   label: {
     en: 'GPS Coordinates',
     fr: 'Coordonnées GPS',
   },
-  name: 'coords',
-  type: 'point',
   required: true,
   custom: {
     defaultZoom: 8,

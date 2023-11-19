@@ -85,22 +85,24 @@ export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
   collections: [PointsOfSale, Categories, Products, Orders, Media, Pages, Users],
   //TODO : i18n
-  // i18n: {
-  //   fallbackLng: 'fr', // default
-  //   debug: false, // default
-  //   resources: {
-  //     en: {
-  //       custom: {
-  //         // namespace can be anything you want
-  //         key1: 'Translation with {{variable}}', // translation
-  //       },
-  //       // override existing translation keys
-  //       general: {
-  //         dashboard: 'HomeTests',
-  //       },
-  //     },
-  //   },
-  // }
+  i18n: {
+    fallbackLng: 'fr', // default
+    debug: true, // default
+    resources: {
+      en: {
+        custom: {
+          // namespace can be anything you want
+          toto: 'Translation', // translation
+        },
+      },
+      fr: {
+        custom: {
+          // namespace can be anything you want
+          toto: 'traduction', // translation
+        },
+      },
+    },
+  },
 
   localization: {
     locales: [

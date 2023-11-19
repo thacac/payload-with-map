@@ -16,50 +16,12 @@ import 'leaflet/dist/leaflet.css'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css'
 import 'leaflet-defaulticon-compatibility'
 import '../globals.css'
-
-const LeafletCluster = dynamic(
-  async () => (await import('./Cluster/LeafletCluster')).LeafletCluster(),
-  {
-    ssr: false,
-  },
-)
+import { LocationMarker } from './LocationMarker'
 
 const AppMapContainer = dynamic(async () => (await import('./AppMapContainer')).AppMapContainer, {
   loading: () => <p>loading...</p>,
   ssr: false,
 })
-
-const LocationMarker = () => {
-  const markerRef = useRef(null)
-  const [position, setPosition] = useState<null | LatLngExpression>(null)
-  const { setPlaces } = useMapContext()
-
-  const eventHandlers = {
-    dragend() {
-      const marker = markerRef.current
-      if (marker != null) {
-        setPosition(marker.getLatLng())
-        setPlaces([marker.getLatLng()])
-      }
-    },
-  }
-
-  const map = useMapEvents({
-    click: (e: LeafletMouseEvent) => {
-      setPosition(e.latlng)
-      setPlaces([e.latlng])
-      map.flyTo(e.latlng)
-    },
-  })
-
-  return position === null ? null : (
-    <Marker position={position} draggable={true} ref={markerRef} eventHandlers={eventHandlers}>
-      <Tooltip direction="bottom" offset={[-15, 30]} opacity={1}>
-        Bordel de couille à cul
-      </Tooltip>
-    </Marker>
-  )
-}
 
 type MapInnerProps = {
   defaultZoom?: number
@@ -114,14 +76,12 @@ export const MapInner: FC<MapInnerProps> = ({
             minZoom={minZoom}
             allMarkersBoundCenter={allMarkersBoundCenter}
           >
-            <LocationMarker />
+            <LocationMarker position={center} />
             {children}
             <>
-              <LeafletCluster chunkedLoading>
-                {places?.map((coords, index) => (
-                  <Marker draggable={true} key={index} position={coords} />
-                ))}
-              </LeafletCluster>
+              {places?.map((coords, index) => (
+                <Marker draggable={true} key={index} position={coords} />
+              ))}
             </>
           </AppMapContainer>
         </>

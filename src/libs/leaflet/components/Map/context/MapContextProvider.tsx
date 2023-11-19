@@ -5,7 +5,7 @@ export interface MapContextValues {
   map: Leaflet.Map | undefined
   setMap: (e: Leaflet.Map | undefined) => void
   places: Leaflet.LatLngExpression[] | undefined
-  setPlaces: (e: Leaflet.LatLngExpression[] | undefined) => void
+  setPlaces: (e: Leaflet.LatLngExpression[]) => void
 }
 
 export const MapContext = createContext<MapContextValues | undefined>(undefined)

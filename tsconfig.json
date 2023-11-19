@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/payload/payload.config.js"  ],
   "exclude": [
     "node_modules"
   ],
